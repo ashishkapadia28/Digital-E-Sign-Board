@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital E-Sign Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="layout">
+        <div class="sidebar">
+            <h2>Saved Signatures</h2>
+            <div class="saved-signatures" id="saved-signatures"></div>
+        </div>
+        <div class="main-container">
+            <div class="container">
+                <h1>Create your signature</h1>
+                <div class="tabs">
+                    <button class="tab-button active" id="draw-tab">Draw</button>
+                </div>
+                <div class="signature-container">
+                    <div class="canvas-wrapper">
+                        <canvas id="signature-pad" width="600" height="400"></canvas>
+                        <img src="pen-icon.png" id="pen-icon" alt="Pen Icon">
+                    </div>
+                    <div class="controls">
+                        <button id="clear">Clear</button>
+                        <button id="save">Save & Apply</button>
+                        <button id="download">Download</button>
+                    </div>
+                    <img id="saved-signature" alt="Saved Signature">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+<!-- Penetration Testing Framework Project
+Network Traffic Analyzer Project
+Intrusion Detection System (IDS)
+Network Mapping and Vulnerability Scanning Project -->
+
+
