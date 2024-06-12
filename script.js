@@ -39,13 +39,10 @@ function startDrawing(e) {
     isDrawing = true;
     const { offsetX, offsetY } = getEventCoordinates(e);
     [lastX, lastY] = [offsetX, offsetY];
-    penIcon.style.display = 'block';
 }
 
-function stopDrawing(e) {
-    e.preventDefault();
+function stopDrawing() {
     isDrawing = false;
-    penIcon.style.display = 'none';
 }
 
 function draw(e) {
@@ -55,9 +52,21 @@ function draw(e) {
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(offsetX, offsetY);
+    ctx.strokeStyle = '#004d40';
+    ctx.lineWidth = 2;
     ctx.stroke();
     [lastX, lastY] = [offsetX, offsetY];
-    movePenIcon(e);
+}
+
+function getEventCoordinates(e) {
+    if (e.touches) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            offsetX: e.touches[0].clientX - rect.left,
+            offsetY: e.touches[0].clientY - rect.top
+        };
+    }
+    return { offsetX: e.offsetX, offsetY: e.offsetY };
 }
 
 function clearCanvas() {
@@ -66,52 +75,34 @@ function clearCanvas() {
 }
 
 function saveSignature() {
-    if (isCanvasEmpty() && typedSignature.value.trim() === '') {
-        alert('No signature to save');
+    const dataURL = canvas.toDataURL('image/png');
+    if (dataURL === 'data:,') {
+        alert('No signature found. Please draw or type your signature.');
         return;
     }
-    const dataURL = isCanvasEmpty() ? textToImage(typedSignature.value) : canvas.toDataURL('image/png');
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.alt = 'Saved Signature';
+    img.classList.add('saved-signature-item-img');
+
+    const div = document.createElement('div');
+    div.classList.add('saved-signature-item');
+    div.appendChild(img);
+    savedSignaturesContainer.appendChild(div);
+
     savedSignatures.push(dataURL);
-    displaySavedSignatures();
 }
 
 function downloadSignature() {
-    if (isCanvasEmpty() && typedSignature.value.trim() === '') {
-        alert('No signature to download');
+    const dataURL = canvas.toDataURL('image/png');
+    if (dataURL === 'data:,') {
+        alert('No signature found. Please draw or type your signature.');
         return;
     }
-    const dataURL = isCanvasEmpty() ? textToImage(typedSignature.value) : canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'signature.png';
     link.click();
-}
-
-function movePenIcon(e) {
-    const { offsetX, offsetY } = getEventCoordinates(e);
-    penIcon.style.left = `${offsetX - 12}px`;
-    penIcon.style.top = `${offsetY - 12}px`;
-}
-
-function getEventCoordinates(e) {
-    if (e.touches) {
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        return {
-            offsetX: touch.clientX - rect.left,
-            offsetY: touch.clientY - rect.top,
-        };
-    } else {
-        return {
-            offsetX: e.offsetX,
-            offsetY: e.offsetY,
-        };
-    }
-}
-
-function isCanvasEmpty() {
-    const pixelBuffer = new Uint32Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
-    return !pixelBuffer.some(color => color !== 0);
 }
 
 function switchTab(tab) {
@@ -119,28 +110,15 @@ function switchTab(tab) {
         drawTab.classList.add('active');
         typeTab.classList.remove('active');
         canvas.style.display = 'block';
+        penIcon.style.display = 'block';
         typedSignature.style.display = 'none';
     } else {
         drawTab.classList.remove('active');
         typeTab.classList.add('active');
         canvas.style.display = 'none';
+        penIcon.style.display = 'none';
         typedSignature.style.display = 'block';
     }
-}
-
-function textToImage(text) {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    tempCtx.fillStyle = '#ffffff';
-    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    tempCtx.fillStyle = '#00796b';
-    tempCtx.font = '40px Arial';
-    tempCtx.textAlign = 'center';
-    tempCtx.textBaseline = 'middle';
-    tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
-    return tempCanvas.toDataURL('image/png');
 }
 
 function showPage(page) {
@@ -151,15 +129,4 @@ function showPage(page) {
         homePage.style.display = 'none';
         saveSignPage.style.display = 'flex';
     }
-}
-
-function displaySavedSignatures() {
-    savedSignaturesContainer.innerHTML = '';
-    savedSignatures.forEach((signature, index) => {
-        const img = document.createElement('img');
-        img.src = signature;
-        img.alt = `Saved Signature ${index + 1}`;
-        img.className = 'saved-signature';
-        savedSignaturesContainer.appendChild(img);
-    });
 }
