@@ -7,41 +7,47 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="layout">
-        <div class="sidebar">
-            <h2>Saved Signatures</h2>
-            <div class="saved-signatures" id="saved-signatures"></div>
-        </div>
+    <header>
+        <div class="logo">DigiESign</div>
+        <nav>
+            <ul>
+                <li><a href="#" id="nav-home">Home</a></li>
+                <li><a href="#" id="nav-save">Saved Sign</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="home-page" class="layout">
         <div class="main-container">
             <div class="container">
-                <h1>Create your signature</h1>
+                <h1>Choose your signature</h1>
                 <div class="tabs">
                     <button class="tab-button active" id="draw-tab">Draw</button>
+                    <button class="tab-button" id="type-tab">Type</button>
                 </div>
                 <div class="signature-container">
                     <div class="canvas-wrapper">
                         <canvas id="signature-pad" width="600" height="400"></canvas>
                         <img src="pen-icon.png" id="pen-icon" alt="Pen Icon">
+                        <textarea id="typed-signature" placeholder="Type your signature"></textarea>
                     </div>
                     <div class="controls">
                         <button id="clear">Clear</button>
                         <button id="save">Save & Apply</button>
                         <button id="download">Download</button>
                     </div>
-                    <img id="saved-signature" alt="Saved Signature">
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="save-sign-page" class="layout" style="display: none;">
+        <div class="main-container">
+            <div class="container">
+                <h1>Saved Signature</h1>
+                <img id="saved-signature" alt="Saved Signature" style="max-width: 100%;">
+                <button id="back-home">Back to Home</button>
             </div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-<!-- Penetration Testing Framework Project
-Network Traffic Analyzer Project
-Intrusion Detection System (IDS)
-Network Mapping and Vulnerability Scanning Project -->
-
-
